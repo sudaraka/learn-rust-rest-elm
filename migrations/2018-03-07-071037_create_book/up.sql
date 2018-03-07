@@ -1,0 +1,8 @@
+-- Your SQL goes here
+
+CREATE TABLE book (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(64) NOT NULL,
+  author VARCHAR(64) NOT NULL,
+  published BOOLEAN NOT NULL DEFAULT 0
+);
