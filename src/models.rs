@@ -5,3 +5,11 @@ pub struct Book {
     pub author: String,
     pub published: bool,
 }
+
+#[derive(Insertable)]
+#[table_name = "book"]
+pub struct NewBook {
+    pub title: String,
+    pub author: String,
+    pub published: bool,
+}
