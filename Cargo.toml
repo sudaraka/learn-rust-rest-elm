@@ -1,0 +1,8 @@
+[package]
+name = "book-api"
+version = "0.1.0"
+authors = ["Sudaraka Wijesinghe <sudaraka@sudaraka.org>"]
+
+[dependencies]
+diesel = { version = "^1.0", features = [ "mysql" ] }
+dotenv = "^0.11"
