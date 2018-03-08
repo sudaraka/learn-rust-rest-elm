@@ -1,19 +1,22 @@
 #[macro_use]
 extern crate diesel;
 extern crate dotenv;
+extern crate r2d2;
+extern crate r2d2_diesel;
 
 use dotenv::dotenv;
 use std::env;
-use diesel::prelude::*;
 
 mod schema;
 mod models;
+mod db;
 
 fn main() {
     dotenv().ok();
 
     let db_url = env::var("DATABASE_URL").expect("Please set DATABASE_URL");
-    let con = MysqlConnection::establish(&db_url).unwrap();
+    let pool = db::init_pool(db_url);
+    let con = pool.get().unwrap();
 
     let book = models::NewBook {
         title: String::from("Gravity's Rainbow"),
