@@ -6,6 +6,14 @@ import Html.Attributes exposing (..)
 import Http
 import Json.Decode as Json
 import Json.Encode as Encode
+import Bootstrap.ListGroup as ListGroup
+import Bootstrap.Form as Form
+import Bootstrap.Form.Input as Input
+import Bootstrap.Form.Checkbox as Checkbox
+import Bootstrap.Card as Card
+import Bootstrap.Card.Block as Block
+import Bootstrap.Button as Button
+import Bootstrap.CDN as CDN
 
 
 type Msg
@@ -18,6 +26,7 @@ type Msg
     | GetTitle String
     | GetAuthor String
     | GetPublished
+    | NoOp
 
 
 type alias Book =
@@ -83,6 +92,9 @@ update msg model =
 
         GetPublished ->
             ( { model | published = not model.published }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
 
 
 delete : Int -> Cmd Msg
@@ -170,34 +182,77 @@ statusDecoder =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ button [ onClick RequestBooks ] [ text "Get Books!" ]
-        , bookForm model
-        , div [] <| List.map bookView model.books
+    div [ class "jumbotron" ]
+        [ CDN.stylesheet
+        , cardView model
         ]
+
+
+cardView : Model -> Html Msg
+cardView model =
+    Card.config []
+        |> Card.header []
+            [ h2 [] [ text "Elm Rust Book Database" ]
+            ]
+        |> Card.block []
+            [ Block.custom <| bookForm model
+            , Block.custom <| Button.button [ Button.success, Button.onClick RequestBooks ] [ text "Get Books!" ]
+            , Block.custom <| br [] []
+            , Block.custom <| div [] <| List.map bookView model.books
+            ]
+        |> Card.view
 
 
 bookView : Book -> Html Msg
 bookView book =
-    ul []
-        [ li [] [ text book.title ]
-        , li [] [ text book.author ]
-        , li [] [ book.published |> toString |> text ]
-        , button [ onClick (RemoveBook book.id) ] [ text "X" ]
+    ListGroup.ul
+        [ ListGroup.li []
+            [ span []
+                [ b [] [ text "Title: " ]
+                , p [] [ text book.title ]
+                ]
+            ]
+        , ListGroup.li []
+            [ span []
+                [ b [] [ text "Author: " ]
+                , p [] [ text book.author ]
+                ]
+            ]
+        , ListGroup.li [ ListGroup.attrs [ class "justify-content-between" ] ]
+            [ span []
+                [ b [] [ text "Published: " ]
+                , p [] [ book.published |> toString |> text ]
+                ]
+            , Button.button [ Button.danger, Button.onClick (RemoveBook book.id) ] [ text "X" ]
+            ]
         ]
 
 
 bookForm : Model -> Html Msg
 bookForm model =
-    div [ id "form" ]
-        [ label [ for "title" ] [ text " Title " ]
-        , input [ id "title", type_ "text", Html.Attributes.value model.title, onInput GetTitle ] []
-        , label [ for "author" ] [ text " Author " ]
-        , input [ id "author", type_ "text", Html.Attributes.value model.author, onInput GetAuthor ] []
-        , label [ for "published" ] [ text " Author " ]
-        , input [ id "published", type_ "checkbox", onClick GetPublished ] []
-        , button [ onClick PostBook ] [ text "Post Book!" ]
+    Form.form []
+        [ Form.group []
+            [ Form.label [ for "title" ] [ text " Title " ]
+            , Input.text [ Input.value model.title, Input.onInput GetTitle ]
+            ]
+        , Form.group []
+            [ Form.label [ for "author" ] [ text " Author " ]
+            , Input.text [ Input.value model.author, Input.onInput GetAuthor ]
+            ]
+        , Form.group []
+            [ Form.label [ for "published" ] [ text " Author " ]
+            , Checkbox.checkbox [ Checkbox.checked False, Checkbox.onCheck isChecked ] "Published ?"
+            ]
+        , Button.button [ Button.primary, Button.onClick PostBook ] [ text "Post Book!" ]
         ]
+
+
+isChecked : Bool -> Msg
+isChecked bool =
+    if bool then
+        GetPublished
+    else
+        NoOp
 
 
 main =
