@@ -1,2 +1,5 @@
 /target
+/node_modules
+/elm-stuff
+/public/app.js
 .env

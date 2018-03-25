@@ -1,0 +1,16 @@
+{
+  "name": "book-client",
+  "version": "0.0.0",
+  "description": "Practice code by following [Tensor Programming - Building an API in Rust](https://www.youtube.com/watch?v=VMZdGX9wC4g).",
+  "main": "brunch-config.js",
+  "scripts": {
+    "start": "webpack --mode development --debug -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (https://sudaraka.org/)",
+  "devDependencies": {
+    "elm-webpack-loader": "^4.5.0",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13"
+  }
+}
