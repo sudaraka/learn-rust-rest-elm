@@ -3,7 +3,7 @@ use rocket_contrib::Json;
 use serde_json::Value;
 use models::{Book, NewBook};
 
-#[get("/", format = "application/json")]
+#[get("/")]
 fn get(con: Con) -> Json<Value> {
     let books = Book::all(&con);
 
@@ -13,7 +13,7 @@ fn get(con: Con) -> Json<Value> {
     }))
 }
 
-#[get("/<id>", format = "application/json")]
+#[get("/<id>")]
 fn get_one(con: Con, id: i32) -> Json<Value> {
     let books = Book::show(id, &con);
     let status = if books.is_empty() { 404 } else { 200 };
@@ -60,7 +60,7 @@ fn delete(con: Con, id: i32) -> Json<Value> {
     }))
 }
 
-#[get("/authors/<author>", format = "application/json")]
+#[get("/authors/<author>")]
 fn get_by_author(author: String, con: Con) -> Json<Value> {
     Json(json!({
         "status": 200,
